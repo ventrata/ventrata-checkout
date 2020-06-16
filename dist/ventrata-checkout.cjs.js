@@ -4,7 +4,8 @@ var zoid = require('zoid/dist/zoid.frameworks.js');
 
 const VentrataCheckout = zoid.create({
   tag: "ventrata-checkout",
-  url: "http://localhost:3000/ventrata-checkout-spa/",
+  url: "https://ventrata.github.io/ventrata-checkout-spa/",
+  // url: "http://localhost:3000/ventrata-checkout-spa/",
   props: {
     token: {
       type: "string",
@@ -24,9 +25,11 @@ const VentrataCheckout = zoid.create({
 class VCheckout extends HTMLElement {
   connectedCallback() {
     const product = this.getAttribute("product");
+
     if (product == null) {
       throw new Error('Expected prop "product" to be defined');
     }
+
     const token = this.getAttribute("token");
     if (token == null) {
       throw new Error('Expected prop "token" to be defined');
