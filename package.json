@@ -1,0 +1,35 @@
+{
+  "name": "ventrata-checkout",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/ventrata-checkout.cjs.js",
+  "module": "dist/ventrata-checkout.esm.js",
+  "browser": "dist/ventrata-checkout.umd.js",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pretest": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ventrata/ventrata-checkout.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ventrata/ventrata-checkout/issues"
+  },
+  "homepage": "https://github.com/ventrata/ventrata-checkout#readme",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^13.0.0",
+    "@rollup/plugin-node-resolve": "^8.0.1",
+    "rollup": "^2.16.1"
+  },
+  "dependencies": {
+    "zoid": "^9.0.43"
+  },
+  "files": [
+    "dist"
+  ]
+}
