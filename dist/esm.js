@@ -1,11 +1,8 @@
-'use strict';
+import { create } from 'zoid/dist/zoid.frameworks.js';
 
-var zoid = require('zoid/dist/zoid.frameworks.js');
-
-const VentrataCheckout = zoid.create({
+const VentrataCheckout = create({
   tag: "ventrata-checkout",
   url: "https://ventrata.github.io/ventrata-checkout-spa/",
-  // url: "http://localhost:3000/ventrata-checkout-spa/",
   props: {
     token: {
       type: "string",
@@ -38,7 +35,7 @@ class VCheckout extends HTMLElement {
     VentrataCheckout({
       product: product,
       token: token,
-    }).render("body");
+    }).render(this);
   }
 }
 

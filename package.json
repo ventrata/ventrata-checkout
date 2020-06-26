@@ -2,9 +2,9 @@
   "name": "ventrata-checkout",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/ventrata-checkout.cjs.js",
-  "module": "dist/ventrata-checkout.esm.js",
-  "browser": "dist/ventrata-checkout.umd.js",
+  "main": "dist/index.js",
+  "module": "dist/esm.js",
+  "browser": "dist/umd.js",
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",

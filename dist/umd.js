@@ -4661,7 +4661,6 @@
 	const VentrataCheckout = zoid_frameworks$1.create({
 	  tag: "ventrata-checkout",
 	  url: "https://ventrata.github.io/ventrata-checkout-spa/",
-	  // url: "http://localhost:3000/ventrata-checkout-spa/",
 	  props: {
 	    token: {
 	      type: "string",
@@ -4694,7 +4693,7 @@
 	    VentrataCheckout({
 	      product: product,
 	      token: token,
-	    }).render("body");
+	    }).render(this);
 	  }
 	}
 
