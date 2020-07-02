@@ -1040,6 +1040,9 @@
 	            for (var key in source) source.hasOwnProperty(key) && (obj[key] = source[key]);
 	            return obj;
 	        }
+	        function identity(item) {
+	            return item;
+	        }
 	        function safeInterval(method, time) {
 	            var timeout;
 	            !function loop() {
@@ -1394,7 +1397,7 @@
 	        }
 	        function global_getGlobal(win) {
 	            void 0 === win && (win = window);
-	            return win !== window ? win.__post_robot_10_0_31__ : win.__post_robot_10_0_31__ = win.__post_robot_10_0_31__ || {};
+	            return win !== window ? win.__post_robot_10_0_35__ : win.__post_robot_10_0_35__ = win.__post_robot_10_0_35__ || {};
 	        }
 	        var getObj = function() {
 	            return {};
@@ -1780,7 +1783,6 @@
 	                    });
 	                };
 	            }({
-	                on: on,
 	                send: send
 	            });
 	            !function(_ref) {
@@ -1898,6 +1900,8 @@
 	                },
 	                setLocation: function(href) {
 	                    return winPromise.then((function(win) {
+	                        var domain = window.location.protocol + "//" + window.location.host;
+	                        if (0 === href.indexOf("/")) href = "" + domain + href; else if (!href.match(/^https?:\/\//) && 0 !== href.indexOf(domain)) throw new Error("Expected url to be http or https url, or absolute path, got " + JSON.stringify(href));
 	                        if (isSameDomain(win)) try {
 	                            if (win.location && "function" == typeof win.location.replace) {
 	                                win.location.replace(href);
@@ -2209,7 +2213,7 @@
 	        }
 	        function deserializeMessage(source, origin, message, _ref2) {
 	            var _deserialize;
-	            var on = _ref2.on, send = _ref2.send;
+	            var send = _ref2.send;
 	            return function(str, deserializers) {
 	                void 0 === deserializers && (deserializers = defaultDeserializers);
 	                if ("undefined" !== str) return JSON.parse(str, (function(key, val) {
@@ -2276,7 +2280,6 @@
 	                    });
 	                    return crossDomainFunctionWrapper;
 	                }(source, origin, serializedFunction, {
-	                    on: on,
 	                    send: send
 	                });
 	            }, _deserialize.cross_domain_window = function(serializedWindow) {
@@ -2322,7 +2325,7 @@
 	            var _serializeMessage;
 	            var on = _ref.on, send = _ref.send;
 	            if (isWindowClosed(win)) throw new Error("Window is closed");
-	            var serializedMessage = serializeMessage(win, domain, ((_serializeMessage = {}).__post_robot_10_0_31__ = _extends({
+	            var serializedMessage = serializeMessage(win, domain, ((_serializeMessage = {}).__post_robot_10_0_35__ = _extends({
 	                id: uniqueID(),
 	                origin: getDomain(window)
 	            }, message), _serializeMessage), {
@@ -2471,7 +2474,7 @@
 	                } catch (err) {
 	                    return;
 	                }
-	                if (parsedMessage && "object" == typeof parsedMessage && null !== parsedMessage && (parsedMessage = parsedMessage.__post_robot_10_0_31__) && "object" == typeof parsedMessage && null !== parsedMessage && parsedMessage.type && "string" == typeof parsedMessage.type && RECEIVE_MESSAGE_TYPES[parsedMessage.type]) return parsedMessage;
+	                if (parsedMessage && "object" == typeof parsedMessage && null !== parsedMessage && (parsedMessage = parsedMessage.__post_robot_10_0_35__) && "object" == typeof parsedMessage && null !== parsedMessage && parsedMessage.type && "string" == typeof parsedMessage.type && RECEIVE_MESSAGE_TYPES[parsedMessage.type]) return parsedMessage;
 	            }(event.data, source, origin, {
 	                on: on,
 	                send: send
@@ -2772,8 +2775,8 @@
 	        function lib_global_getGlobal(win) {
 	            void 0 === win && (win = window);
 	            if (!isSameDomain(win)) throw new Error("Can not get global for window on different domain");
-	            win.__zoid_9_0_43__ || (win.__zoid_9_0_43__ = {});
-	            return win.__zoid_9_0_43__;
+	            win.__zoid_9_0_46__ || (win.__zoid_9_0_46__ = {});
+	            return win.__zoid_9_0_46__;
 	        }
 	        function getProxyObject(obj) {
 	            return {
@@ -3058,6 +3061,11 @@
 	                    props: props
 	                }) : url;
 	            };
+	            var getAttributes = function() {
+	                return "function" == typeof attributes ? attributes({
+	                    props: props
+	                }) : attributes;
+	            };
 	            var getChildDomain = function() {
 	                return domainMatch && "string" == typeof domainMatch ? domainMatch : getDomainFromUrl(getUrl());
 	            };
@@ -3073,7 +3081,7 @@
 	                        attributes: _extends({
 	                            name: windowName,
 	                            title: name
-	                        }, attributes.iframe)
+	                        }, getAttributes().iframe)
 	                    }));
 	                }));
 	            };
@@ -3083,7 +3091,7 @@
 	                        attributes: _extends({
 	                            name: "__zoid_prerender_frame__" + name + "_" + uniqueID() + "__",
 	                            title: "prerender__" + name
-	                        }, attributes.iframe)
+	                        }, getAttributes().iframe)
 	                    }));
 	                }));
 	            };
@@ -3247,7 +3255,7 @@
 	                            name: windowName,
 	                            width: width,
 	                            height: height
-	                        }, attributes.popup));
+	                        }, getAttributes().popup));
 	                        clean.register((function() {
 	                            return closeWindow(win);
 	                        }));
@@ -3710,7 +3718,7 @@
 	                                    uid: uid = _ref4.uid,
 	                                    context: context,
 	                                    tag: tag,
-	                                    version: "9_0_43",
+	                                    version: "9_0_46",
 	                                    childDomain: childDomain,
 	                                    parentDomain: getDomain(window),
 	                                    parent: getWindowRef(0, childDomain, uid, context),
@@ -4097,7 +4105,11 @@
 	        var component_clean = cleanup();
 	        function component_component(opts) {
 	            var options = function(options) {
-	                var tag = options.tag, url = options.url, domain = options.domain, bridgeUrl = options.bridgeUrl, _options$props = options.props, propsDef = void 0 === _options$props ? {} : _options$props, _options$dimensions = options.dimensions, dimensions = void 0 === _options$dimensions ? {} : _options$dimensions, _options$autoResize = options.autoResize, autoResize = void 0 === _options$autoResize ? {} : _options$autoResize, _options$allowedParen = options.allowedParentDomains, allowedParentDomains = void 0 === _options$allowedParen ? "*" : _options$allowedParen, _options$attributes = options.attributes, attributes = void 0 === _options$attributes ? {} : _options$attributes, _options$defaultConte = options.defaultContext, defaultContext = void 0 === _options$defaultConte ? CONTEXT.IFRAME : _options$defaultConte, _options$containerTem = options.containerTemplate, containerTemplate = void 0 === _options$containerTem ? defaultContainerTemplate : _options$containerTem, _options$prerenderTem = options.prerenderTemplate, prerenderTemplate = void 0 === _options$prerenderTem ? defaultPrerenderTemplate : _options$prerenderTem, validate = options.validate, _options$logger = options.logger, logger = void 0 === _options$logger ? {
+	                var tag = options.tag, url = options.url, domain = options.domain, bridgeUrl = options.bridgeUrl, _options$props = options.props, propsDef = void 0 === _options$props ? {} : _options$props, _options$dimensions = options.dimensions, dimensions = void 0 === _options$dimensions ? {} : _options$dimensions, _options$autoResize = options.autoResize, autoResize = void 0 === _options$autoResize ? {} : _options$autoResize, _options$allowedParen = options.allowedParentDomains, allowedParentDomains = void 0 === _options$allowedParen ? "*" : _options$allowedParen, _options$attributes = options.attributes, attributes = void 0 === _options$attributes ? {} : _options$attributes, _options$defaultConte = options.defaultContext, defaultContext = void 0 === _options$defaultConte ? CONTEXT.IFRAME : _options$defaultConte, _options$containerTem = options.containerTemplate, containerTemplate = void 0 === _options$containerTem ? defaultContainerTemplate : _options$containerTem, _options$prerenderTem = options.prerenderTemplate, prerenderTemplate = void 0 === _options$prerenderTem ? defaultPrerenderTemplate : _options$prerenderTem, validate = options.validate, _options$eligible = options.eligible, eligible = void 0 === _options$eligible ? function() {
+	                    return {
+	                        eligible: !0
+	                    };
+	                } : _options$eligible, _options$logger = options.logger, logger = void 0 === _options$logger ? {
 	                    info: src_util_noop
 	                } : _options$logger;
 	                var name = tag.replace(/-/g, "_");
@@ -4108,7 +4120,14 @@
 	                        sendToChild: !1,
 	                        required: !1,
 	                        allowDelegate: !0,
-	                        validate: function(_ref2) {},
+	                        validate: function(_ref2) {
+	                            var value = _ref2.value;
+	                            if (!isWindow(value) && !window_ProxyWindow.isProxyWindow(value)) throw new Error("Expected Window or ProxyWindow");
+	                            if (isWindow(value)) {
+	                                if (isWindowClosed(value)) throw new Error("Window is closed");
+	                                if (!isSameDomain(value)) throw new Error("Window is not same domain");
+	                            }
+	                        },
 	                        decorate: function(_ref3) {
 	                            return setup_toProxyWindow(_ref3.value);
 	                        }
@@ -4267,12 +4286,14 @@
 	                    containerTemplate: containerTemplate,
 	                    prerenderTemplate: prerenderTemplate,
 	                    validate: validate,
-	                    logger: logger
+	                    logger: logger,
+	                    eligible: eligible
 	                };
 	            }(opts);
-	            var name = options.name, tag = options.tag, defaultContext = options.defaultContext, propsDef = options.propsDef;
+	            var name = options.name, tag = options.tag, defaultContext = options.defaultContext, propsDef = options.propsDef, eligible = options.eligible;
 	            var global = lib_global_getGlobal();
 	            var driverCache = {};
+	            var instances = [];
 	            var isChild = function() {
 	                var payload = getChildPayload();
 	                return Boolean(payload && payload.tag === tag && payload.childDomain === getDomain());
@@ -4289,7 +4310,7 @@
 	                        var childPayload = getChildPayload();
 	                        var props;
 	                        if (!childPayload) throw new Error("No child payload found");
-	                        if ("9_0_43" !== childPayload.version) throw new Error("Parent window has zoid version " + childPayload.version + ", child window has version 9_0_43");
+	                        if ("9_0_46" !== childPayload.version) throw new Error("Parent window has zoid version " + childPayload.version + ", child window has version 9_0_46");
 	                        var parentDomain = childPayload.parentDomain, exports = childPayload.exports, context = childPayload.context, propsRef = childPayload.props;
 	                        var parentComponentWindow = function(ref) {
 	                            var type = ref.type;
@@ -4451,16 +4472,27 @@
 	                    return child;
 	                }
 	            }));
-	            var init = function(props) {
-	                (props = props || {}).onDestroy = memoize(props.onDestroy || src_util_noop);
+	            var init = function init(props) {
+	                var instance;
+	                var _eligible = eligible({
+	                    props: props = props || {}
+	                }), eligibility = _eligible.eligible, reason = _eligible.reason;
+	                var onDestroy = props.onDestroy;
+	                props.onDestroy = function() {
+	                    instance && eligibility && instances.splice(instances.indexOf(instance), 1);
+	                    if (onDestroy) return onDestroy.apply(void 0, arguments);
+	                };
 	                var parent = parentComponent(options);
 	                parent.init();
-	                parent.setProps(props);
+	                eligibility ? parent.setProps(props) : props.onDestroy && props.onDestroy();
 	                component_clean.register((function() {
 	                    parent.destroy(new Error("zoid destroyed all components"));
 	                }));
 	                var _render = function(target, container, context) {
 	                    return promise_ZalgoPromise.try((function() {
+	                        if (!eligibility) return parent.destroy().then((function() {
+	                            throw new Error(reason || name + " component is not eligible");
+	                        }));
 	                        if (!isWindow(target)) throw new Error("Must pass window to renderTo");
 	                        return function(props, context) {
 	                            return promise_ZalgoPromise.try((function() {
@@ -4488,7 +4520,14 @@
 	                        }));
 	                    }));
 	                };
-	                return _extends({}, parent.getHelpers(), {
+	                instance = _extends({}, parent.getHelpers(), {
+	                    isEligible: function() {
+	                        return eligibility;
+	                    },
+	                    clone: function(_temp) {
+	                        var _ref3$decorate = (void 0 === _temp ? {} : _temp).decorate;
+	                        return init((void 0 === _ref3$decorate ? identity : _ref3$decorate)(props));
+	                    },
 	                    render: function(container, context) {
 	                        return _render(window, container, context);
 	                    },
@@ -4496,6 +4535,8 @@
 	                        return _render(target, container, context);
 	                    }
 	                });
+	                eligibility && instances.push(instance);
+	                return instance;
 	            };
 	            registerChild();
 	            !function() {
@@ -4513,6 +4554,7 @@
 	            global.components[tag] = !0;
 	            return {
 	                init: init,
+	                instances: instances,
 	                driver: function(driverName, dep) {
 	                    var drivers = {
 	                        react: react,
@@ -4623,6 +4665,7 @@
 	            init.canRenderTo = function(win) {
 	                return comp.canRenderTo(win);
 	            };
+	            init.instances = comp.instances;
 	            var child = comp.registerChild();
 	            child && (window.xprops = init.xprops = child.getProps());
 	            return init;
@@ -4636,7 +4679,7 @@
 	        var destroyComponents = destroyAll;
 	        function component_destroy() {
 	            destroyAll();
-	            delete window.__zoid_9_0_43__;
+	            delete window.__zoid_9_0_46__;
 	            !function() {
 	                !function() {
 	                    var responseListeners = globalStore("responseListeners");
@@ -4649,7 +4692,7 @@
 	                }();
 	                (listener = globalStore().get("postMessageListener")) && listener.cancel();
 	                var listener;
-	                delete window.__post_robot_10_0_31__;
+	                delete window.__post_robot_10_0_35__;
 	            }();
 	        }
 	    } ]);
