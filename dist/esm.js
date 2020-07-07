@@ -12,6 +12,10 @@ const VentrataCheckout = create({
       type: "string",
       required: true,
     },
+    changeViewType: {
+      type: "function",
+      required: true,
+    },
   },
   dimensions: {
     width: "345px",
@@ -22,6 +26,7 @@ const VentrataCheckout = create({
 class VCheckout extends HTMLElement {
   connectedCallback() {
     const product = this.getAttribute("product");
+    this.setAttribute("id", "ventrata-checkout");
 
     if (product == null) {
       throw new Error('Expected prop "product" to be defined');
@@ -35,7 +40,17 @@ class VCheckout extends HTMLElement {
     VentrataCheckout({
       product: product,
       token: token,
+      changeViewType: this.changeViewType,
     }).render(this);
+  }
+
+  changeViewType(viewType) {
+    const el = document.querySelector("#ventrata-checkout iframe");
+    if (viewType === "modal") {
+      el.style.position = "fixed";
+    } else {
+      el.style.position = "static";
+    }
   }
 }
 

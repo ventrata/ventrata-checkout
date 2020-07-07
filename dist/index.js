@@ -1,8 +1,8 @@
 'use strict';
 
-var zoid = require('zoid/dist/zoid.frameworks.js');
+var zoid_frameworks_js = require('zoid/dist/zoid.frameworks.js');
 
-const VentrataCheckout = zoid.create({
+const VentrataCheckout = zoid_frameworks_js.create({
   tag: "ventrata-checkout",
   url: "https://ventrata.github.io/ventrata-checkout-spa/",
   props: {
@@ -12,6 +12,10 @@ const VentrataCheckout = zoid.create({
     },
     product: {
       type: "string",
+      required: true,
+    },
+    changeViewType: {
+      type: "function",
       required: true,
     },
   },
@@ -24,6 +28,7 @@ const VentrataCheckout = zoid.create({
 class VCheckout extends HTMLElement {
   connectedCallback() {
     const product = this.getAttribute("product");
+    this.setAttribute("id", "ventrata-checkout");
 
     if (product == null) {
       throw new Error('Expected prop "product" to be defined');
@@ -37,7 +42,17 @@ class VCheckout extends HTMLElement {
     VentrataCheckout({
       product: product,
       token: token,
+      changeViewType: this.changeViewType,
     }).render(this);
+  }
+
+  changeViewType(viewType) {
+    const el = document.querySelector("#ventrata-checkout iframe");
+    if (viewType === "modal") {
+      el.style.position = "fixed";
+    } else {
+      el.style.position = "static";
+    }
   }
 }
 

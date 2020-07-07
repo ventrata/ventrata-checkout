@@ -4713,6 +4713,10 @@
 	      type: "string",
 	      required: true,
 	    },
+	    changeViewType: {
+	      type: "function",
+	      required: true,
+	    },
 	  },
 	  dimensions: {
 	    width: "345px",
@@ -4723,6 +4727,7 @@
 	class VCheckout extends HTMLElement {
 	  connectedCallback() {
 	    const product = this.getAttribute("product");
+	    this.setAttribute("id", "ventrata-checkout");
 
 	    if (product == null) {
 	      throw new Error('Expected prop "product" to be defined');
@@ -4736,7 +4741,17 @@
 	    VentrataCheckout({
 	      product: product,
 	      token: token,
+	      changeViewType: this.changeViewType,
 	    }).render(this);
+	  }
+
+	  changeViewType(viewType) {
+	    const el = document.querySelector("#ventrata-checkout iframe");
+	    if (viewType === "modal") {
+	      el.style.position = "fixed";
+	    } else {
+	      el.style.position = "static";
+	    }
 	  }
 	}
 
