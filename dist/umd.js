@@ -4749,8 +4749,10 @@
 	    const el = document.querySelector("#ventrata-checkout iframe");
 	    if (viewType === "modal") {
 	      el.style.position = "fixed";
+	      el.style.zIndex = 999999999;
 	    } else {
 	      el.style.position = "static";
+	      el.style.zIndex = 0;
 	    }
 	  }
 	}
