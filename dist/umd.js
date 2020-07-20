@@ -4733,6 +4733,18 @@
 	});
 
 	const VENTRATA_ID = "ventrata-checkout";
+
+	function changeViewType(viewType) {
+	  const el = document.querySelector(`${VENTRATA_ID} iframe`);
+	  if (viewType === "modal") {
+	    el.style.position = "fixed";
+	    el.style.zIndex = 999999999;
+	  } else {
+	    el.style.position = "static";
+	    el.style.zIndex = 0;
+	  }
+	}
+
 	class VCheckout extends HTMLElement {
 	  constructor() {
 	    super();
@@ -4761,14 +4773,14 @@
 	    this.element = VentrataCheckout({
 	      product: product,
 	      token: token,
-	      changeViewType: this.changeViewType,
+	      changeViewType: changeViewType,
 	      closeModal: this.handleCloseModal,
 	      viewType: this.type,
 	    }).render(this);
 
 	    if (this.type === "modal" && this.firstChild) {
-	      this.contentElement = document.querySelector(`${VENTRATA_ID} > div`);
-	      this.contentElement.style.display = "none";
+	      const contentElement = document.querySelector(`${VENTRATA_ID} > div`);
+	      contentElement.style.display = "none";
 	      this.firstChild.addEventListener("click", this.handleModalView);
 	    }
 	  }
@@ -4779,25 +4791,16 @@
 	    }
 	  }
 
-	  handleModalView = () => {
-	    this.contentElement.style.display = "inline-block";
-	    this.changeViewType("modal");
-	  };
+	  handleModalView() {
+	    const contentElement = document.querySelector(`${VENTRATA_ID} > div`);
+	    contentElement.style.display = "inline-block";
+	    changeViewType("modal");
+	  }
 
-	  handleCloseModal = () => {
-	    this.contentElement.style.display = "none";
-	  };
-
-	  changeViewType = (viewType) => {
-	    const el = document.querySelector(`${VENTRATA_ID} iframe`);
-	    if (viewType === "modal") {
-	      el.style.position = "fixed";
-	      el.style.zIndex = 999999999;
-	    } else {
-	      el.style.position = "static";
-	      el.style.zIndex = 0;
-	    }
-	  };
+	  handleCloseModal() {
+	    const contentElement = document.querySelector(`${VENTRATA_ID} > div`);
+	    contentElement.style.display = "none";
+	  }
 	}
 
 	customElements.define("ventrata-checkout", VCheckout);
